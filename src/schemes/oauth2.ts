@@ -18,7 +18,8 @@ import {
   parseQuery,
   removeTokenPrefix,
   urlJoin,
-  randomString
+  randomString,
+  getDevice
 } from '../utils'
 import {
   RefreshController,
@@ -398,7 +399,10 @@ export class Oauth2Scheme<
           response_type: this.options.responseType,
           audience: this.options.audience,
           grant_type: this.options.grantType,
-          code_verifier: codeVerifier
+          code_verifier: codeVerifier,
+          deviceName: getDevice(),
+          clientId: this.options.clientId,
+          state: ''
         })
       })
 

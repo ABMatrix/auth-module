@@ -42,17 +42,14 @@ export interface ModuleOptions {
 
 export const moduleDefaults: ModuleOptions = {
   //  -- Error handling --
-
   resetOnError: false,
 
   ignoreExceptions: false,
 
   // -- Authorization --
-
   scopeKey: 'scope',
 
   // -- Redirects --
-
   rewriteRedirects: true,
 
   fullPathRedirect: false,
@@ -67,13 +64,11 @@ export const moduleDefaults: ModuleOptions = {
   },
 
   //  -- Vuex Store --
-
   vuex: {
     namespace: 'auth'
   },
 
   // -- Cookie Store --
-
   cookie: {
     prefix: 'auth.',
     options: {
@@ -82,13 +77,11 @@ export const moduleDefaults: ModuleOptions = {
   },
 
   // -- localStorage Store --
-
   localStorage: {
     prefix: 'auth.'
   },
 
   // -- Strategies --
-
   defaultStrategy: undefined /* will be auto set at module level */,
 
   strategies: {}

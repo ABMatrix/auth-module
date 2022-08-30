@@ -1,5 +1,8 @@
 import type { Context } from '@nuxt/types'
+import { getParser } from 'bowser'
 import type { Route, RecursivePartial } from '../types'
+
+const DEVICE_NAME_KEY = 'device_name'
 
 export const isUnset = (o: unknown): boolean =>
   typeof o === 'undefined' || o === null
@@ -214,4 +217,17 @@ export function randomString(length) {
     result += characters.charAt(Math.floor(Math.random() * charactersLength))
   }
   return result
+}
+
+export function getDevice() {
+  let deviceName = localStorage.getItem(DEVICE_NAME_KEY)
+  if (deviceName) return deviceName
+  const parsed = getParser(window.navigator.userAgent)
+  const os = parsed.getOS()
+  const browser = parsed.getBrowser()
+  const { type } = parsed.getPlatform()
+
+  deviceName = `${os.name}${os.version}-${browser.name}${browser.version}-${type}`
+  localStorage.setItem(DEVICE_NAME_KEY, deviceName)
+  return deviceName
 }
