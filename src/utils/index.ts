@@ -1,5 +1,5 @@
 import type { Context } from '@nuxt/types'
-import { getParser } from 'bowser'
+import bowser from 'bowser'
 import type { Route, RecursivePartial } from '../types'
 
 const DEVICE_NAME_KEY = 'device_name'
@@ -222,7 +222,7 @@ export function randomString(length) {
 export function getDevice() {
   let deviceName = localStorage.getItem(DEVICE_NAME_KEY)
   if (deviceName) return deviceName
-  const parsed = getParser(window.navigator.userAgent)
+  const parsed = bowser.getParser(window.navigator.userAgent)
   const os = parsed.getOS()
   const browser = parsed.getBrowser()
   const { type } = parsed.getPlatform()

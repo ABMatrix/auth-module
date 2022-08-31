@@ -56,6 +56,7 @@ export interface Oauth2SchemeOptions
   redirectUri: string
   logoutRedirectUri: string
   clientId: string | number
+  customClientId: string
   scope: string | string[]
   state: string
   codeChallengeMethod: 'implicit' | 'S256' | 'plain'
@@ -392,7 +393,7 @@ export class Oauth2Scheme<
         method: 'post',
         url: this.options.endpoints.token,
         baseURL: '',
-        data: encodeQuery({
+        data: {
           code: parsedQuery.code as string,
           client_id: this.options.clientId + '',
           redirect_uri: this.redirectURI,
@@ -401,9 +402,9 @@ export class Oauth2Scheme<
           grant_type: this.options.grantType,
           code_verifier: codeVerifier,
           deviceName: getDevice(),
-          clientId: this.options.clientId,
-          state: ''
-        })
+          clientID: this.options.customClientId,
+          state: 'SBT'
+        }
       })
 
       token =
@@ -464,7 +465,7 @@ export class Oauth2Scheme<
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded'
         },
-        data: encodeQuery({
+        data: {
           refresh_token: removeTokenPrefix(
             refreshToken,
             this.options.token.type
@@ -472,7 +473,7 @@ export class Oauth2Scheme<
           scopes: this.scope,
           client_id: this.options.clientId + '',
           grant_type: 'refresh_token'
-        })
+        }
       })
       .catch((error) => {
         this.$auth.callOnError(error, { method: 'refreshToken' })
