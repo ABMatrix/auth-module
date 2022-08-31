@@ -3,6 +3,9 @@ import bowser from 'bowser'
 import type { Route, RecursivePartial } from '../types'
 
 const DEVICE_NAME_KEY = 'device_name'
+function getRandomInt(value: number) {
+  return Math.floor(Math.random() * value)
+}
 
 export const isUnset = (o: unknown): boolean =>
   typeof o === 'undefined' || o === null
@@ -226,8 +229,9 @@ export function getDevice() {
   const os = parsed.getOS()
   const browser = parsed.getBrowser()
   const { type } = parsed.getPlatform()
+  const random = Array.from({ length: 6 }, () => getRandomInt(10)).join('')
 
-  deviceName = `${os.name}${os.version}-${browser.name}${browser.version}-${type}`
+  deviceName = `${os.name}${os.version}-${browser.name}${browser.version}-${type}-${random}`
   localStorage.setItem(DEVICE_NAME_KEY, deviceName)
   return deviceName
 }
