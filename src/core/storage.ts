@@ -42,7 +42,7 @@ export class Storage {
     }
 
     // Cookies
-    this.setCookie(key, value)
+    // this.setCookie(key, value)
 
     // Local Storage
     this.setLocalStorage(key, value)
@@ -62,9 +62,9 @@ export class Storage {
     }
 
     // Cookies
-    if (isUnset(value)) {
-      value = this.getCookie(key)
-    }
+    // if (isUnset(value)) {
+    //   value = this.getCookie(key)
+    // }
 
     // Local Storage
     if (isUnset(value)) {

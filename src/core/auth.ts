@@ -16,7 +16,8 @@ import {
   isSet,
   isSameURL,
   getProp,
-  normalizePath
+  normalizePath,
+  encodeQuery
 } from '../utils'
 import { Storage } from './storage'
 
@@ -398,7 +399,11 @@ export class Auth {
     }
   }
 
-  redirect(name: string, noRouter = false): void {
+  redirect(
+    name: string,
+    noRouter = false,
+    customQuery?: { [key: string]: string }
+  ): void {
     if (!this.options.redirect) {
       return
     }
@@ -444,6 +449,9 @@ export class Auth {
       if (noRouter) {
         if (isRelativeURL(to) && !to.includes(this.ctx.base)) {
           to = normalizePath('/' + this.ctx.base + '/' + to) // Don't pass in context to preserve base url
+        }
+        if (customQuery) {
+          to = to + '?' + encodeQuery(customQuery)
         }
         window.location.replace(to)
       } else {

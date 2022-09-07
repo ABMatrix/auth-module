@@ -215,7 +215,8 @@ export class LocalScheme<
     return this.$auth
       .requestWith(this.name, endpoint, this.options.endpoints.user)
       .then((response) => {
-        const userData = getProp(response.data, this.options.user.property)
+        // const userData = getProp(response.data, this.options.user.property)
+        const userData = response.data
 
         if (!userData) {
           const error = new Error(

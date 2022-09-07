@@ -56,7 +56,6 @@ export interface Oauth2SchemeOptions
   redirectUri: string
   logoutRedirectUri: string
   clientId: string | number
-  customClientId: string
   scope: string | string[]
   state: string
   codeChallengeMethod: 'implicit' | 'S256' | 'plain'
@@ -240,6 +239,8 @@ export class Oauth2Scheme<
   async login(
     _opts: { state?: string; params?; nonce?: string } = {}
   ): Promise<void> {
+    const query = this.$auth.ctx.query
+    if (!query.clientId) query.clientId = 'SBT'
     const opts = {
       protocol: 'oauth2',
       response_type: this.options.responseType,
@@ -304,6 +305,7 @@ export class Oauth2Scheme<
     }
 
     this.$auth.$storage.setUniversal(this.name + '.state', opts.state)
+    this.$auth.$storage.setUniversal(this.name + '.query', query)
 
     const url = this.options.endpoints.authorization + '?' + encodeQuery(opts)
 
@@ -336,7 +338,7 @@ export class Oauth2Scheme<
       url: this.options.endpoints.userInfo
     })
 
-    this.$auth.setUser(getProp(response.data, this.options.user.property))
+    this.$auth.setUser(response.data)
   }
 
   async _handleCallback(): Promise<boolean | void> {
@@ -370,45 +372,39 @@ export class Oauth2Scheme<
     if (state && parsedQuery.state !== state) {
       return
     }
+    const query = this.$auth.$storage.getUniversal(this.name + '.query') as {
+      [key: string]: string
+    }
 
     // -- Authorization Code Grant --
     if (this.options.responseType === 'code' && parsedQuery.code) {
-      let codeVerifier
+      // let codeVerifier
 
       // Retrieve code verifier and remove it from storage
       if (
         this.options.codeChallengeMethod &&
         this.options.codeChallengeMethod !== 'implicit'
       ) {
-        codeVerifier = this.$auth.$storage.getUniversal(
-          this.name + '.pkce_code_verifier'
-        )
+        // codeVerifier = this.$auth.$storage.getUniversal(
+        //   this.name + '.pkce_code_verifier'
+        // )
         this.$auth.$storage.setUniversal(
           this.name + '.pkce_code_verifier',
           null
         )
       }
-
       const response = await this.$auth.request({
         method: 'post',
         url: this.options.endpoints.token,
         baseURL: '',
         data: {
           code: parsedQuery.code as string,
-          client_id: this.options.clientId + '',
-          redirect_uri: this.redirectURI,
-          response_type: this.options.responseType,
-          audience: this.options.audience,
-          grant_type: this.options.grantType,
-          code_verifier: codeVerifier,
           deviceName: getDevice(),
-          clientID: this.options.customClientId,
-          state: 'SBT'
+          clientID: query.clientId,
+          state: parsedQuery.state as string
         }
       })
-
-      token =
-        (getProp(response.data, this.options.token.property) as string) || token
+      token = response.data
       refreshToken =
         (getProp(
           response.data,
@@ -430,7 +426,7 @@ export class Oauth2Scheme<
 
     // Redirect to home
     if (this.$auth.options.watchLoggedIn) {
-      this.$auth.redirect('home', true)
+      this.$auth.redirect('home', true, query)
       return true // True means a redirect happened
     }
   }

@@ -73,7 +73,13 @@ export default <NuxtConfig>{
       },
       google: {
         clientId:
-          '956748748298-kr2t08kdbjq3ke18m3vkl6k843mra1cg.apps.googleusercontent.com'
+          '180486279695-0lok2uk6m46r92k3d4h168ktn7o2t6m4.apps.googleusercontent.com',
+        codeChallengeMethod: '',
+        responseType: 'code',
+        endpoints: {
+          token: '/oauth2mockserver/token',
+          userInfo: '/oauth2mockserver/userinfo'
+        }
       },
       github: {
         clientId: process.env.GITHUB_CLIENT_ID,
