@@ -401,7 +401,8 @@ export class Oauth2Scheme<
           code: parsedQuery.code as string,
           deviceName: getDevice(),
           clientID: query.clientId,
-          state: parsedQuery.state as string
+          state: parsedQuery.state as string,
+          oauth2Type: this.name.toUpperCase()
         }
       })
       token = response.data
