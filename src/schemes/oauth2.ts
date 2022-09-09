@@ -378,16 +378,16 @@ export class Oauth2Scheme<
 
     // -- Authorization Code Grant --
     if (this.options.responseType === 'code' && parsedQuery.code) {
-      // let codeVerifier
+      let codeVerifier
 
       // Retrieve code verifier and remove it from storage
       if (
         this.options.codeChallengeMethod &&
         this.options.codeChallengeMethod !== 'implicit'
       ) {
-        // codeVerifier = this.$auth.$storage.getUniversal(
-        //   this.name + '.pkce_code_verifier'
-        // )
+        codeVerifier = this.$auth.$storage.getUniversal(
+          this.name + '.pkce_code_verifier'
+        )
         this.$auth.$storage.setUniversal(
           this.name + '.pkce_code_verifier',
           null
@@ -402,7 +402,8 @@ export class Oauth2Scheme<
           deviceName: getDevice(),
           clientID: query.clientId,
           state: parsedQuery.state as string,
-          oauth2Type: this.name.toUpperCase()
+          oauth2Type: this.name.toUpperCase(),
+          codeVerify: codeVerifier
         }
       })
       token = response.data
