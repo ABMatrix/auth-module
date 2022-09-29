@@ -23,6 +23,15 @@ import { Storage } from './storage'
 
 export type ErrorListener = (...args: unknown[]) => void
 export type RedirectListener = (to: string, from: string) => string
+export type User = {
+  userID?: string
+  userLoginName?: string
+  username?: string
+  userLoginType?: string
+  avatar?: string
+  userClientID?: string
+  publicKeyAddress?: string
+}
 
 export class Auth {
   public ctx: Context
@@ -300,12 +309,17 @@ export class Auth {
 
   setUser(user: unknown): void {
     this.$storage.setState('user', user)
-
     let check = { valid: Boolean(user) }
 
     // If user is defined, perform scheme checks.
     if (check.valid) {
       check = this.check()
+      const loginInfo = {
+        type: (user as User).userLoginType,
+        name: (user as User).username,
+        avatar: (user as User).avatar
+      }
+      this.$storage.setUniversal('lastLoginInfo', JSON.stringify(loginInfo))
     }
 
     // Update `loggedIn` state
