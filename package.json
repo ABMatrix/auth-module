@@ -1,6 +1,6 @@
 {
   "name": "@safematrix-auth/nuxt-auth",
-  "version": "5.0.13",
+  "version": "5.0.14",
   "description": "Authentication module for Nuxt.js",
   "repository": "nuxt-community/auth-module",
   "license": "MIT",
