@@ -346,6 +346,13 @@ export class Oauth1Scheme<
       this.refreshToken.set(refreshToken)
     }
 
+    if (query.loginType) {
+      const link = document.createElement('a')
+      link.setAttribute('href', `${query.scheme}:callback?token=${token}`)
+      document.body.append(link)
+      link.click()
+    }
+
     // Redirect to home
     if (this.$auth.options.watchLoggedIn) {
       this.$auth.redirect('home', true, query)
