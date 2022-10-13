@@ -430,6 +430,7 @@ export class Oauth2Scheme<
       link.setAttribute('href', `${query.scheme}:callback?token=${token}`)
       document.body.append(link)
       link.click()
+      window.close()
     }
     // Redirect to home
     if (this.$auth.options.watchLoggedIn) {
