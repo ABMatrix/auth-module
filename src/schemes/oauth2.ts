@@ -431,6 +431,7 @@ export class Oauth2Scheme<
       document.body.append(link)
       link.click()
       window.close()
+      return true
     }
     // Redirect to home
     if (this.$auth.options.watchLoggedIn) {

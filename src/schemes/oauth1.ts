@@ -352,6 +352,7 @@ export class Oauth1Scheme<
       document.body.append(link)
       link.click()
       window.close()
+      return true
     }
 
     // Redirect to home
