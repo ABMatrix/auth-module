@@ -417,6 +417,15 @@ export class Oauth2Scheme<
     if (!token || !token.length) {
       return
     }
+    if (query.loginType) {
+      const link = document.createElement('a')
+      link.setAttribute('href', `${query.scheme}:callback?token=${token}`)
+      link.setAttribute('target', '_self')
+      document.body.append(link)
+      link.click()
+      window.close()
+      return true
+    }
 
     // Set token
     this.token.set(token)
@@ -424,14 +433,6 @@ export class Oauth2Scheme<
     // Store refresh token
     if (refreshToken && refreshToken.length) {
       this.refreshToken.set(refreshToken)
-    }
-    if (query.loginType) {
-      const link = document.createElement('a')
-      link.setAttribute('href', `${query.scheme}:callback?token=${token}`)
-      document.body.append(link)
-      link.click()
-      window.close()
-      return true
     }
     // Redirect to home
     if (this.$auth.options.watchLoggedIn) {
