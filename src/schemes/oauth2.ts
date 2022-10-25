@@ -399,7 +399,7 @@ export class Oauth2Scheme<
         baseURL: '',
         data: {
           code: parsedQuery.code as string,
-          deviceName: getDevice(),
+          deviceName: query.deviceName ?? getDevice(),
           clientID: query.clientId,
           state: parsedQuery.state as string,
           oauth2Type: this.name.toUpperCase(),
@@ -418,6 +418,24 @@ export class Oauth2Scheme<
       return
     }
     if (query.loginType) {
+      if (query.from) {
+        const data = {
+          result: 'agree',
+          id: query.id,
+          data: token
+        }
+        const targetOrigin = query.from
+        const withIframe = query.withIframe
+        if (withIframe === 'true') {
+          window.parent?.postMessage(data, '*')
+          return
+        }
+        window.opener?.postMessage(data, {
+          targetOrigin
+        })
+        window.close()
+        return
+      }
       const link = document.createElement('a')
       link.setAttribute('href', `${query.scheme}:callback?token=${token}`)
       link.setAttribute('target', '_self')
