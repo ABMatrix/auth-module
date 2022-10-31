@@ -418,13 +418,13 @@ export class Oauth2Scheme<
       return
     }
     if (query.loginType) {
-      if (query.from) {
+      if (query.origin) {
         const data = {
           result: 'agree',
           id: query.id,
           data: token
         }
-        const targetOrigin = query.from
+        const targetOrigin = query.origin
         const withIframe = query.withIframe
         if (withIframe === 'true') {
           window.parent?.postMessage(data, '*')
