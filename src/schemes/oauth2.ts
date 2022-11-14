@@ -419,22 +419,10 @@ export class Oauth2Scheme<
     }
     if (query.loginType) {
       if (query.origin) {
-        const data = {
-          result: 'agree',
-          id: query.id,
-          data: token
-        }
-        const targetOrigin = query.origin
-        const withIframe = query.withIframe
-        if (withIframe === 'true') {
-          window.parent?.postMessage(data, '*')
-          return
-        }
-        window.opener?.postMessage(data, {
-          targetOrigin
-        })
-        window.close()
-        return
+        const url = new URL(decodeURI(origin))
+        url.searchParams.set('token', token)
+        window.location.assign(url)
+        return true
       }
       const link = document.createElement('a')
       link.setAttribute('href', `${query.scheme}:callback?token=${token}`)
