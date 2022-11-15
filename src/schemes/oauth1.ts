@@ -339,7 +339,7 @@ export class Oauth1Scheme<
     }
     if (query.loginType) {
       if (query.origin) {
-        const url = new URL(decodeURI(origin))
+        const url = new URL(decodeURI(query.origin))
         url.searchParams.set('token', token)
         window.location.assign(url)
         return true
