@@ -419,6 +419,24 @@ export class Oauth2Scheme<
     }
     if (query.loginType) {
       if (query.origin) {
+        if (query.id) {
+          const data = {
+            result: 'agree',
+            id: query.id,
+            data: token
+          }
+          const targetOrigin = query.origin
+          const withIframe = query.withIframe
+          if (withIframe === 'true') {
+            window.parent?.postMessage(data, '*')
+            return
+          }
+          window.opener?.postMessage(data, {
+            targetOrigin
+          })
+          window.close()
+          return
+        }
         const url = new URL(query.origin)
         url.searchParams.set('token', token)
         window.location.replace(url)
